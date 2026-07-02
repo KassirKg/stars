@@ -1,16 +1,14 @@
-'use client';
-
 import Image from 'next/image';
 
 import { Crown, Package, Users } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 import { ProductsList } from '@/widgets/productsList';
 
 import styles from './StarPage.module.scss';
 
-const Page = () => {
-  const t = useTranslations();
+export default async function Page() {
+  const t = await getTranslations();
 
   return (
     <div className={styles.root}>
@@ -56,6 +54,4 @@ const Page = () => {
       <ProductsList />
     </div>
   );
-};
-
-export default Page;
+}

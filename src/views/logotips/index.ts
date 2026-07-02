@@ -1,1 +1,0 @@
-export { LogotipsView } from './LogotipsView';

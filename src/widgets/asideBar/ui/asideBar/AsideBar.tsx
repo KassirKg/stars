@@ -1,48 +1,43 @@
 'use client';
 
-import { type Dispatch, type SetStateAction } from 'react';
-
 import Image from 'next/image';
 
+import { useAtom } from 'jotai';
 import { ReceiptText, UserRound } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { IoClose } from 'react-icons/io5';
 
+import { paymentDataGatewayAtom } from '@/entities/payment';
 import { FormSendDataUserForPay } from '@/features/sendDataUserForPay';
+import { isAsideOpen } from '@/shared/store';
 import { calculateTotalPrice } from '@/shared/utils';
 
 import styles from './AsideBar.module.scss';
 
 interface AsideBarProps {
-  productName: string;
-  productCount: string | number;
-  productPrice: string | number;
-  productSize?: string;
-  setIsAsideOpen: Dispatch<SetStateAction<boolean>>;
-  isAsideOpen: boolean;
+  title: string;
+  image: string;
 }
 
-const AsideBar = ({
-  productName,
-  productPrice,
-  productCount,
-  productSize,
-  setIsAsideOpen,
-  isAsideOpen,
-}: AsideBarProps) => {
+const AsideBar = ({ ...props }: AsideBarProps) => {
   const localizer = useTranslations();
-  const onClose = () => setIsAsideOpen(false);
+  const [isAsideBarOpen, setIsAsideBarOpen] = useAtom(isAsideOpen);
+  const [paymentInfo] = useAtom(paymentDataGatewayAtom);
+
+  const onClose = () => {
+    setIsAsideBarOpen(false);
+  };
 
   return (
     <>
       <button
-        className={`${styles.overlay} ${isAsideOpen ? styles.overlayOpen : ''}`}
+        className={`${styles.overlay} ${isAsideBarOpen ? styles.overlayOpen : ''}`}
         onClick={onClose}
       />
 
       <aside
-        className={`${styles.panel} ${isAsideOpen ? styles.panelOpen : ''}`}
-        aria-hidden={!isAsideOpen}
+        className={`${styles.panel} ${isAsideBarOpen ? styles.panelOpen : ''}`}
+        aria-hidden={!isAsideBarOpen}
       >
         <div className={styles.header}>
           <div className={styles.header__top}>
@@ -55,24 +50,18 @@ const AsideBar = ({
           <h4>{localizer('checkoutSubtitle')}</h4>
 
           <div className={styles.productInfo}>
-            <Image
-              src={'/images/ex8.jpg'}
-              alt={'product image'}
-              width={100}
-              height={100}
-              priority
-            />
+            <Image src={props.image} alt={'product image'} width={100} height={100} priority />
             <div className={styles.productInfo_textInfo}>
-              <h4>{productName}</h4>
+              <h4>{props.title}</h4>
               <p>
-                {productPrice} {localizer('som')}
+                {paymentInfo.price} {localizer('som')}
               </p>
               <div>
                 <p>
-                  {localizer('sizes')}: {productSize}
+                  {localizer('sizes')}: {paymentInfo.size}
                 </p>
                 <p>
-                  {localizer('count')}: {productCount}шт.
+                  {localizer('count')}: {paymentInfo.count}шт.
                 </p>
               </div>
             </div>
@@ -96,7 +85,7 @@ const AsideBar = ({
               <h3>{localizer('totalToPay')}</h3>
             </div>
             <h2>
-              {calculateTotalPrice(productCount, productPrice)} {localizer('som')}
+              {calculateTotalPrice(paymentInfo.count, paymentInfo.price)} {localizer('som')}
             </h2>
           </div>
           <div className={styles.footer_btns}>

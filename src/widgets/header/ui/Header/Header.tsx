@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import { useTranslations } from 'next-intl';
 
 import { SearchBar } from '@/features/search';
@@ -9,7 +11,6 @@ import { Link, usePathname } from '@/shared/lib/i18n/navigation';
 import styles from './Header.module.scss';
 import { Burger } from '../burger';
 import { LocaleSwitcher } from '../LocaleSwitcher/LocaleSwitcher';
-import { Logo } from '../Logo/Logo';
 
 export const Header = () => {
   const t = useTranslations();
@@ -19,7 +20,13 @@ export const Header = () => {
     <header className={styles.root}>
       <div className={styles.inner}>
         <Link href="/" className={styles.logo} aria-label={brand.appName}>
-          <Logo alt={brand.appName} />
+          <Image
+            src={'/images/logos/kg/headerLogo.svg'}
+            alt="logo"
+            width={120}
+            height={40}
+            className={styles.logo}
+          />
         </Link>
 
         <div className={styles.searchSlot}>

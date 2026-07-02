@@ -1,16 +1,8 @@
 import { atom } from 'jotai';
 
-export type Product = {
-  id: number;
-  title: string;
-  price: number;
-  author: string;
-  image: string;
-  slug: string;
-  new?: boolean;
-};
+import { type IProductModel, type IProduct } from './productModel';
 
-export const productsAtom = atom<Product[]>([
+export const productsAtom = atom<IProduct[]>([
   {
     id: 1,
     title: 'Худи Black Oversize',
@@ -102,3 +94,15 @@ export const productsAtom = atom<Product[]>([
     new: true,
   },
 ]);
+
+export const productAtom = atom<IProductModel>({
+  id: 0,
+  title: '',
+  price: 0,
+  image: '',
+  count: 1,
+  fullName: '',
+  phoneNumber: '',
+  email: '',
+  size: '',
+});

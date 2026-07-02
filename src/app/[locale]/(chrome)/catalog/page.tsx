@@ -1,32 +1,16 @@
-'use client';
+import { getTranslations } from 'next-intl/server';
 
-import { useAtomValue } from 'jotai';
-import { useTranslations } from 'next-intl';
-
-import { ProductCard, productsAtom } from '@/entities/product';
+import { ProductsList } from '@/widgets/productsList';
 
 import styles from './CatalogPage.module.scss';
 
-function ProductsPage() {
-  const t = useTranslations();
-  const products = useAtomValue(productsAtom);
+async function ProductsPage() {
+  const t = await getTranslations();
 
   return (
     <div className={styles.root}>
       <h1 className={styles.title}>{t('catalogPageTitle')}</h1>
-      <section className={styles.productsList}>
-        {products.map((item) => (
-          <ProductCard
-            key={item.id}
-            slug={item.slug}
-            title={item.title}
-            image={item.image}
-            price={item.price}
-            new={item.new}
-            author={item.author}
-          />
-        ))}
-      </section>
+      <ProductsList />
     </div>
   );
 }

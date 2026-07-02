@@ -7,7 +7,6 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { Toaster } from 'react-hot-toast';
 
-import { WebViewBootstrap } from '@/features/webview';
 import { brand, env } from '@/shared/config';
 import { routing } from '@/shared/lib/i18n/routing';
 import { themeInitScript } from '@/shared/lib/theme-init-script';
@@ -112,10 +111,7 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
       <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ScrollToTop />
-          <AppProviders>
-            <WebViewBootstrap />
-            {children}
-          </AppProviders>
+          <AppProviders>{children}</AppProviders>
         </NextIntlClientProvider>
         <Toaster position="top-center" />
         <WebVitals />

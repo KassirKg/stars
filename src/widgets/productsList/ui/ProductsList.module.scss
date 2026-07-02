@@ -47,10 +47,3 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
-.grid > * {
-  @media screen and (max-width: 768px) {
-    flex: 0 0 40%;
-    scroll-snap-align: start;
-  }
-}
