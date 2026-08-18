@@ -1,42 +1,42 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import {useTranslations} from "next-intl";
+import { useTranslations } from 'next-intl';
+
+import { useArtistCategories } from '@/entities/artistCategory';
+import { ALL_CATEGORIES, selectedArtistCategoryAtom } from '@/shared/model';
 
 import styles from './FilterArtistsList.module.scss';
-import { selectedArtistCategoryAtom } from '../../../../shared';
 import FilterCell from '../filterCell/FilterCell';
 
-
-const MOCK_FILTERS = [
-    { label: 'filterLinks.all', value: 'all' },
-    { label: 'filterLinks.artists', value: 'artist' },
-    { label: 'filterLinks.singers', value: 'singer' },
-    { label: 'filterLinks.comedians', value: 'comedian' },
-] as const;
-
 function FilterArtistsList() {
-    const [selectedCategory, setSelectedCategory] = useAtom(
-        selectedArtistCategoryAtom
-    );
-    const localizer = useTranslations();
+  const [selectedCategory, setSelectedCategory] = useAtom(selectedArtistCategoryAtom);
+  const localizer = useTranslations();
+  const { data: categories } = useArtistCategories();
 
-    return (
-        <div className={styles.filterList}>
-            {MOCK_FILTERS.map((filter) => {
+  // Категорий нет — фильтровать нечем, строка кнопок не нужна.
+  if (!categories?.length) return null;
 
-                return (
-                    <FilterCell
-                        key={filter.value}
-                        onClick={() => setSelectedCategory(filter.value)}
-                        isActiveCell={selectedCategory === filter.value}
-                    >
-                        {localizer(filter.label)}
-                    </FilterCell>
-                );
-            })}
-        </div>
-    );
+  return (
+    <div className={styles.filterList}>
+      <FilterCell
+        onClick={() => setSelectedCategory(ALL_CATEGORIES)}
+        isActiveCell={selectedCategory === ALL_CATEGORIES}
+      >
+        {localizer('filterLinks.all')}
+      </FilterCell>
+
+      {categories.map((category) => (
+        <FilterCell
+          key={category.id}
+          onClick={() => setSelectedCategory(category.slug)}
+          isActiveCell={selectedCategory === category.slug}
+        >
+          {category.name}
+        </FilterCell>
+      ))}
+    </div>
+  );
 }
 
 export default FilterArtistsList;

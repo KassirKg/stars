@@ -1,34 +1,41 @@
+import { Suspense } from 'react';
+
 import { getTranslations } from 'next-intl/server';
 
-import { getBanners } from '@/entities/banner/server';
-import { FilterArtistsList } from '@/features/filterArtists';
-import { BannersCarousel } from '@/widgets/banners-carousel';
+import { Loader } from '@/shared/ui';
 import { MobileSearch } from '@/widgets/header';
-import { ProductsList } from '@/widgets/productsList';
-import { StarsList } from '@/widgets/starsList';
 
 import styles from './HomeView.module.scss';
 import { type HomeViewProps } from './HomeView.types';
+import { HomeBanners } from './ui/HomeBanners';
+import { HomeProducts } from './ui/HomeProducts';
+import { HomeStars } from './ui/HomeStars';
 
+/**
+ * Запросы живут внутри секций, а не здесь: иначе страница ждала бы их все
+ * до первого байта и Suspense ничего бы не дал. Границы стоят ниже роута,
+ * поэтому на HTTP-статус они не влияют — в отличие от общего loading.tsx.
+ */
 export const HomeView = async ({ locale }: HomeViewProps) => {
-  const [banners, t] = await Promise.all([getBanners(locale), getTranslations()]);
+  const t = await getTranslations();
 
   return (
     <div className={styles.root}>
       <MobileSearch />
 
-      {banners.length > 0 ? (
-        <section className={styles.hero}>
-          <BannersCarousel banners={banners} />
-        </section>
-      ) : null}
+      <Suspense fallback={null}>
+        <HomeBanners locale={locale} />
+      </Suspense>
 
       <h2 className={styles.title}>{t('homePage.stars')}</h2>
-      <FilterArtistsList />
-      <StarsList />
+      <Suspense fallback={<Loader size="lg" ariaLabel={t('common.loading')} />}>
+        <HomeStars locale={locale} />
+      </Suspense>
 
       <h2 className={styles.title}>{t('homePage.products')}</h2>
-      <ProductsList />
+      <Suspense fallback={<Loader size="lg" ariaLabel={t('common.loading')} />}>
+        <HomeProducts locale={locale} />
+      </Suspense>
     </div>
   );
 };

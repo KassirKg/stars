@@ -2,13 +2,15 @@
 
 import Image from 'next/image';
 
+import { useIsMutating } from '@tanstack/react-query';
 import { useAtom } from 'jotai';
 import { ReceiptText, UserRound } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { IoClose } from 'react-icons/io5';
 
 import { paymentDataGatewayAtom } from '@/entities/payment';
-import { FormSendDataUserForPay } from '@/features/sendDataUserForPay';
+import { FormSendDataUserForPay, createOrderMutationKey } from '@/features/sendDataUserForPay';
+import { currencyLabel } from '@/shared/config';
 import { isAsideOpen } from '@/shared/store';
 import { calculateTotalPrice } from '@/shared/utils';
 
@@ -23,6 +25,7 @@ const AsideBar = ({ ...props }: AsideBarProps) => {
   const localizer = useTranslations();
   const [isAsideBarOpen, setIsAsideBarOpen] = useAtom(isAsideOpen);
   const [paymentInfo] = useAtom(paymentDataGatewayAtom);
+  const isOrdering = useIsMutating({ mutationKey: createOrderMutationKey }) > 0;
 
   const onClose = () => {
     setIsAsideBarOpen(false);
@@ -54,7 +57,7 @@ const AsideBar = ({ ...props }: AsideBarProps) => {
             <div className={styles.productInfo_textInfo}>
               <h4>{props.title}</h4>
               <p>
-                {paymentInfo.price} {localizer('som')}
+                {paymentInfo.price} {currencyLabel(paymentInfo.currency)}
               </p>
               <div>
                 <p>
@@ -85,11 +88,17 @@ const AsideBar = ({ ...props }: AsideBarProps) => {
               <h3>{localizer('totalToPay')}</h3>
             </div>
             <h2>
-              {calculateTotalPrice(paymentInfo.count, paymentInfo.price)} {localizer('som')}
+              {calculateTotalPrice(paymentInfo.count, paymentInfo.price)}{' '}
+              {currencyLabel(paymentInfo.currency)}
             </h2>
           </div>
           <div className={styles.footer_btns}>
-            <button className={styles.payBtn} form={'payment-form'}>
+            <button
+              type="submit"
+              className={styles.payBtn}
+              form={'payment-form'}
+              disabled={isOrdering}
+            >
               {localizer('pay')}
             </button>
           </div>

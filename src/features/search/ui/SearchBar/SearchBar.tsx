@@ -5,16 +5,19 @@ import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Search, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-import { EventCard, useSearchSessions } from '@/entities/event';
+import { ProductCard } from '@/entities/product';
+import { StarHumanCard } from '@/entities/starHuman';
 import { useClickOutside, useDebounce } from '@/shared/lib';
 import { usePathname } from '@/shared/lib/i18n/navigation';
 import { Loader } from '@/shared/ui';
 
 import styles from './SearchBar.module.scss';
 import { type SearchBarProps } from './SearchBar.types';
+import { useSearch } from '../../api/client';
 
 export const SearchBar = ({ placeholder }: SearchBarProps) => {
   const t = useTranslations('common');
+  const tSearch = useTranslations('search');
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -22,12 +25,12 @@ export const SearchBar = ({ placeholder }: SearchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const debounced = useDebounce(query.trim(), 350);
 
+  const { data, isFetching, isError } = useSearch(debounced);
+
   useEffect(() => {
     setIsOpen(false);
     setQuery('');
   }, [pathname]);
-
-  const { data, isFetching, isError } = useSearchSessions(debounced);
 
   useClickOutside(containerRef, () => setIsOpen(false));
 
@@ -49,8 +52,9 @@ export const SearchBar = ({ placeholder }: SearchBarProps) => {
     setIsOpen(false);
   };
 
-  const hasResults = !!data && data.length > 0;
-  const showEmpty = isOpen && debounced.length > 0 && !isFetching && !hasResults;
+  const artists = data?.artists ?? [];
+  const products = data?.products ?? [];
+  const hasResults = artists.length > 0 || products.length > 0;
 
   return (
     <div ref={containerRef} className={styles.root}>
@@ -81,14 +85,50 @@ export const SearchBar = ({ placeholder }: SearchBarProps) => {
           ) : isError ? (
             <div className={styles.state}>{t('error')}</div>
           ) : hasResults ? (
-            <div className={styles.results}>
-              {data.slice(0, 8).map((session) => (
-                <EventCard key={session.id} session={session} />
-              ))}
-            </div>
-          ) : showEmpty ? (
-            <div className={styles.state}>{t('emptyResults')}</div>
-          ) : null}
+            <>
+              {artists.length > 0 ? (
+                <>
+                  <h3 className={styles.groupTitle}>{tSearch('stars')}</h3>
+                  <div className={styles.results}>
+                    {artists.map((artist) => (
+                      <StarHumanCard
+                        key={artist.id}
+                        slug={artist.slug}
+                        name={artist.name}
+                        description={artist.description}
+                        image={artist.image}
+                        categoryName={artist.category_name}
+                        onClick={() => setIsOpen(false)}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : null}
+
+              {products.length > 0 ? (
+                <>
+                  <h3 className={styles.groupTitle}>{tSearch('products')}</h3>
+                  <div className={styles.results}>
+                    {products.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        slug={product.slug}
+                        title={product.title}
+                        image={product.image}
+                        price={product.price}
+                        currency={product.currency}
+                        new={product.is_new}
+                        author={product.author}
+                        onClick={() => setIsOpen(false)}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </>
+          ) : (
+            <div className={styles.state}>{tSearch('empty')}</div>
+          )}
         </div>
       ) : null}
     </div>

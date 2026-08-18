@@ -392,3 +392,50 @@
     height: 320px;
   }
 }
+
+.colors {
+  display: flex;
+  gap: $space-2;
+  align-items: center;
+  font-size: $font-size-sm;
+  color: var(--color-fg-muted);
+
+  svg {
+    color: var(--color-accent-11);
+
+    :global([data-theme='dark']) & {
+      color: var(--color-accent-9) !important;
+    }
+  }
+}
+
+.colorList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.colorSwatch {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-full;
+  transition: transform var(--transition-fast);
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      transform: scale(1.1);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+}
+
+.colorSwatchActive {
+  border-color: var(--color-accent-9);
+  box-shadow: 0 0 0 2px var(--color-accent-9);
+}

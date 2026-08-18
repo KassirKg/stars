@@ -10,14 +10,3 @@ export class ApiError extends Error {
     super(message);
   }
 }
-
-export interface Paginated<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-}

@@ -1,37 +1,80 @@
+import { cache } from 'react';
+
+import { notFound } from 'next/navigation';
+
+import { setRequestLocale } from 'next-intl/server';
+
 import { ProductSlider } from '@/entities/banner';
+import { fetchProduct } from '@/entities/product/server';
+import { ApiError } from '@/shared/api';
+import { decodeRouteParam } from '@/shared/lib';
+import { assertLocale } from '@/shared/lib/i18n';
 import { AsideBar } from '@/widgets/asideBar';
 import { ProductInfo } from '@/widgets/productInfo';
 
 import styles from './ProductPage.module.scss';
 
-const MOCK_DATAS = ['/images/ex9.jpg', '/images/ex10.jpg', '/images/ex11.jpg'];
+import type { Metadata } from 'next';
 
-const MOCK_INFO = {
-  id: 1,
-  title: 'Футболка',
-  author: 'Egor Kreed',
-  price: 2500,
-  description: 'Премиальная футболка',
-  sizes: ['XS', 'S', 'M', 'L', 'XL'],
-  image: '/images/ex9.jpg',
+interface ProductPageProps {
+  params: Promise<{ locale: string; slug: string }>;
+}
+
+/** cache() дедуплицирует запрос между generateMetadata и страницей. */
+const getProduct = cache(async (locale: string, slug: string) => {
+  try {
+    return await fetchProduct(locale, slug);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
+});
+
+export const generateMetadata = async ({ params }: ProductPageProps): Promise<Metadata> => {
+  const { locale, slug: rawSlug } = await params;
+  const slug = decodeRouteParam(rawSlug);
+
+  const product = await getProduct(locale, slug);
+  // notFound() здесь, а не только в теле: статус ответа задаётся до стриминга
+  if (!product) notFound();
+
+  return {
+    title: product.title,
+    description: product.description,
+    openGraph: {
+      title: product.title,
+      description: product.description,
+      images: product.images.length ? [product.images[0]!] : undefined,
+    },
+  };
 };
 
-const ProductPage = () => {
+const ProductPage = async ({ params }: ProductPageProps) => {
+  const { locale, slug: rawSlug } = await params;
+  const slug = decodeRouteParam(rawSlug);
+  assertLocale(locale);
+  setRequestLocale(locale);
+
+  const product = await getProduct(locale, slug);
+  if (!product) notFound();
+
   return (
     <div className={styles.root}>
-      <AsideBar title={MOCK_INFO.title} image={MOCK_INFO.image} />
+      <AsideBar title={product.title} image={product.images[0] ?? ''} />
 
       <section className={styles.hero}>
-        <ProductSlider images={MOCK_DATAS} />
+        <ProductSlider images={product.images} />
 
         <ProductInfo
-          key={MOCK_INFO.id}
-          title={MOCK_INFO.title}
-          author={MOCK_INFO.author}
-          price={MOCK_INFO.price}
-          description={MOCK_INFO.description}
-          sizes={MOCK_INFO.sizes}
-          image={MOCK_INFO.image}
+          id={product.id}
+          title={product.title}
+          author={product.author}
+          price={product.price}
+          currency={product.currency}
+          description={product.description}
+          sizes={product.sizes}
+          colors={product.colors ?? []}
+          stock={product.stock}
         />
       </section>
     </div>

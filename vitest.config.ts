@@ -20,6 +20,15 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
+    // env.ts падает без этих переменных, а его тянет любой импорт shared/api
+    env: {
+      NEXT_PUBLIC_APP_NAME: 'kassir',
+      NEXT_PUBLIC_COUNTRY_CODE: 'kg',
+      NEXT_PUBLIC_BASE_API_URL: 'https://stars-api.kassir.kg',
+      NEXT_PUBLIC_IP_API_URL: 'https://stars-api.kassir.kg',
+      NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
+      NEXT_PUBLIC_APP_ENV: 'development',
+    },
     css: {
       modules: {
         classNameStrategy: 'non-scoped',

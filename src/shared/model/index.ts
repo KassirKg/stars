@@ -1,4 +1,4 @@
 export { themeAtom, resolvedThemeAtom } from './theme';
 export type { Theme, ResolvedTheme } from './theme';
 export { tokenAtom, userIdAtom, isAuthAtom, getOrCreateUserUuid } from './session';
-export { selectedArtistCategoryAtom } from './filterArtistsAtom'
+export { selectedArtistCategoryAtom, ALL_CATEGORIES } from './filterArtistsAtom';

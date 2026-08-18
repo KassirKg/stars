@@ -1,14 +1,12 @@
 export { env } from './env';
 export type { Env } from './env';
-export { ROUTES, BANNERS_URL, IMAGES_URL, SCHEMES_URL } from './routes';
+export { ROUTES, BANNERS_URL, IMAGES_URL } from './routes';
 export type { AppRoute } from './routes';
 export { brand } from './brand';
 export type { BrandConfig, AccentColor } from './brand';
 export { logo, getWebviewLogo } from './logo';
 export type { LogoConfig } from './logo';
-export { getLogotips } from './logotips';
-export type { LogotipItem } from './logotips';
-export { currency, formatPrice } from './currency';
+export { currency, formatPrice, currencyLabel } from './currency';
 export type { CurrencyConfig } from './currency';
 export { COUNTRIES, COUNTRY_ALIASES } from './countries';
 export type { Country } from './countries';

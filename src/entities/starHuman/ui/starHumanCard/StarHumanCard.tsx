@@ -5,22 +5,23 @@ import { Link } from '@/shared/lib/i18n/navigation';
 import styles from './StarHumanCard.module.scss';
 
 type StarHumanCardProps = {
-  type: 'artist';
   slug: string;
   name: string;
   description: string;
   image?: string;
+  /** ед. число из API: «Певец» — бейдж поверх обложки */
+  categoryName?: string;
   onClick?: () => void;
 };
 
 const StarHumanCard = ({
-                                slug,
-                                name,
-                                description,
-                                image,
-                                onClick,
-                              }: StarHumanCardProps) => {
-
+  slug,
+  name,
+  description,
+  image,
+  categoryName,
+  onClick,
+}: StarHumanCardProps) => {
   return (
     <Link href={`/star/${slug}`} className={styles.root} onClick={onClick}>
       <div className={styles.imageWrap}>
@@ -36,8 +37,7 @@ const StarHumanCard = ({
           <div className={styles.imagePlaceholder} aria-hidden />
         )}
 
-        <span className={styles.pinBadge}>Artist</span>
-
+        {categoryName ? <span className={styles.pinBadge}>{categoryName}</span> : null}
       </div>
 
       <div className={styles.body}>

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import { formatPrice } from '@/shared/config';
 import { Link } from '@/shared/lib/i18n/navigation';
 
 import styles from './ProductCard.module.scss';
@@ -9,6 +10,8 @@ interface ProductCardProps {
   title: string;
   author: string;
   price: number;
+  /** KGS | UZS | TJS из API; без него берётся валюта витрины */
+  currency?: string;
   image?: string;
   new?: boolean;
   onClick?: () => void;
@@ -19,11 +22,11 @@ const ProductCard = ({
   title,
   author,
   price,
+  currency,
   image,
   new: isNew,
   onClick,
 }: ProductCardProps) => {
-
   return (
     <Link href={`/product/${slug}`} className={styles.root} onClick={onClick}>
       <div className={styles.imageWrap}>
@@ -42,7 +45,7 @@ const ProductCard = ({
         {isNew ? <span className={styles.pinBadge}>new</span> : null}
 
         <div className={styles.priceCluster}>
-          <span className={styles.priceBadge}>{price} сом</span>
+          <span className={styles.priceBadge}>{formatPrice(price, currency)}</span>
         </div>
       </div>
 

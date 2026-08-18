@@ -2,25 +2,25 @@
 
 import { useAtomValue } from 'jotai';
 
-import { StarHumanCard, artistsAtom } from '@/entities/starHuman';
+import { StarHumanCard, useArtists } from '@/entities/starHuman';
 import { selectedArtistCategoryAtom } from '@/shared/model';
 
 import styles from './StarsList.module.scss';
 
 interface ContentSectionProps {
   title?: string;
+  /** Жёстко заданная категория. Без неё берём выбранную в фильтре. */
+  category?: string;
 }
 
-const StarsList = ({ title }: ContentSectionProps) => {
-  const artists = useAtomValue(artistsAtom);
+const StarsList = ({ title, category }: ContentSectionProps) => {
   const selectedCategory = useAtomValue(selectedArtistCategoryAtom);
+  // Фильтрует бэкенд: «Все» -> api/all-artists, категория -> api/artist-categories/{slug}
+  const { data } = useArtists(category ?? selectedCategory);
 
-  const filteredArtists =
-    selectedCategory === 'all'
-      ? artists
-      : artists.filter((artist) => artist.category === selectedCategory);
+  const artists = data?.items ?? [];
 
-  if (!filteredArtists.length) return null;
+  if (!artists.length) return null;
 
   return (
     <section className={styles.root}>
@@ -31,14 +31,14 @@ const StarsList = ({ title }: ContentSectionProps) => {
       )}
 
       <div className={styles.grid}>
-        {filteredArtists.map((item) => (
+        {artists.map((item) => (
           <StarHumanCard
             key={item.id}
-            type="artist"
+            slug={item.slug}
             name={item.name}
             description={item.description}
             image={item.image}
-            slug={item.slug}
+            categoryName={item.category_name}
           />
         ))}
       </div>

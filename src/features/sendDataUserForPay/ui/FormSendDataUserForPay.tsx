@@ -6,22 +6,28 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
 import { useForm, Controller } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { PatternFormat } from 'react-number-format';
 
 import { paymentDataGatewayAtom } from '@/entities/payment';
+import { getOrCreateUserUuid } from '@/shared/model';
 import { LabelInput } from '@/shared/ui';
 
+import { useCreateOrder } from '../api/client';
 import { type ISendDataUserForPaySchema, sendDataUserForPaySchema } from '../lib';
 import styles from './FormSendDataUserForPay.module.scss';
+import { mapOrderErrors } from '../lib/mapOrderErrors';
 
 function FormSendDataUserForPay() {
   const localizer = useTranslations();
   const [paymentDataGateway, setPaymentDataGateway] = useAtom(paymentDataGatewayAtom);
+  const createOrder = useCreateOrder();
 
   const {
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm<ISendDataUserForPaySchema>({
     resolver: zodResolver(sendDataUserForPaySchema),
@@ -35,6 +41,38 @@ function FormSendDataUserForPay() {
 
   const onSubmit = (data: ISendDataUserForPaySchema) => {
     setPaymentDataGateway({ ...paymentDataGateway, ...data });
+
+    createOrder.mutate(
+      {
+        product_id: paymentDataGateway.id,
+        size: paymentDataGateway.size ?? '',
+        color_id: paymentDataGateway.colorId ?? null,
+        count: paymentDataGateway.count,
+        customer: {
+          full_name: data.fullName,
+          phone: data.phoneNumber,
+          email: data.email,
+        },
+        user_uuid: getOrCreateUserUuid(),
+      },
+      {
+        onSuccess: ({ payment_url }) => {
+          // внешняя платёжная страница — уходим полной навигацией
+          window.location.href = payment_url;
+        },
+        onError: (error) => {
+          const { fields, rest } = mapOrderErrors(error);
+
+          for (const [field, message] of Object.entries(fields)) {
+            setError(field as keyof ISendDataUserForPaySchema, { type: 'server', message });
+          }
+
+          const hasFieldErrors = Object.keys(fields).length > 0;
+          if (rest.length > 0) rest.forEach((message) => toast.error(message));
+          else if (!hasFieldErrors) toast.error(localizer('common.error'));
+        },
+      },
+    );
   };
 
   return (

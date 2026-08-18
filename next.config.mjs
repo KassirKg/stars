@@ -8,6 +8,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const withNextIntl = createNextIntlPlugin('./src/shared/lib/i18n/request.ts');
 
+const apiImagePattern = (() => {
+  try {
+    const { protocol, hostname } = new URL(process.env.NEXT_PUBLIC_BASE_API_URL);
+    return [{ protocol: protocol.replace(':', ''), hostname }];
+  } catch {
+    return [];
+  }
+})();
+
 const withBundleAnalyzer = withBundleAnalyzerFactory({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -48,11 +57,7 @@ const nextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      { protocol: 'https', hostname: 'gateway.kassir.kg' },
-      { protocol: 'https', hostname: 'api.showgo.uz' },
-      { protocol: 'https', hostname: 'api.showgo.tj' },
-    ],
+    remotePatterns: [...apiImagePattern, { protocol: 'https', hostname: 'stars-api.kassir.kg' }],
   },
 
   sassOptions: {

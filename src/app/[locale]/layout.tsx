@@ -1,13 +1,13 @@
 import { type ReactNode } from 'react';
 
 import { Inter } from 'next/font/google';
-import { notFound } from 'next/navigation';
 
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { Toaster } from 'react-hot-toast';
 
 import { brand, env } from '@/shared/config';
+import { assertLocale } from '@/shared/lib/i18n';
 import { routing } from '@/shared/lib/i18n/routing';
 import { themeInitScript } from '@/shared/lib/theme-init-script';
 import { AppProviders } from '@/shared/providers/AppProviders';
@@ -60,8 +60,20 @@ export const generateMetadata = async ({
   const title = t(`${safeKey}.title`);
   const description = t(`${safeKey}.description`);
 
+  // без объявленных иконок браузер сам дёргает /favicon.ico, а его нет —
+  // запрос проваливается в [locale] и рендерит страницу с мусорной локалью
+  const iconsDir = `/images/favicons/${['kg', 'tj', 'uz'].includes(code) ? code : 'kg'}`;
+
   return {
     metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+    icons: {
+      icon: [
+        { url: `${iconsDir}/favicon.ico`, sizes: 'any' },
+        { url: `${iconsDir}/favicon-32x32.png`, type: 'image/png', sizes: '32x32' },
+        { url: `${iconsDir}/favicon-16x16.png`, type: 'image/png', sizes: '16x16' },
+      ],
+      apple: `${iconsDir}/apple-touch-icon.png`,
+    },
     title: {
       default: title,
       template: `%s — ${brand.appName}`,
@@ -91,9 +103,7 @@ export const generateMetadata = async ({
 
 const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
   const { locale } = await params;
-  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
-    notFound();
-  }
+  assertLocale(locale);
 
   setRequestLocale(locale);
   const messages = await getMessages();

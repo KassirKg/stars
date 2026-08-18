@@ -21,4 +21,20 @@ const pick = (): CurrencyConfig => {
 
 export const currency: CurrencyConfig = pick();
 
-export const formatPrice = (value: number): string => `${value.toLocaleString()} ${currency.label}`;
+const LABEL_BY_CODE: Record<string, string> = {
+  KGS: 'сом',
+  TJS: 'сомони',
+  RUB: '₽',
+  UZS: 'сум',
+};
+
+/** Подпись валюты: из кода API (KGS | UZS | TJS), иначе валюта витрины из env. */
+export const currencyLabel = (code?: string): string =>
+  (code ? LABEL_BY_CODE[code] : undefined) ?? currency.label;
+
+/**
+ * `code` приходит из API вместе с ценой (KGS | UZS | TJS).
+ * Без него берём валюту витрины из env.
+ */
+export const formatPrice = (value: number, code?: string): string =>
+  `${value.toLocaleString()} ${currencyLabel(code)}`;

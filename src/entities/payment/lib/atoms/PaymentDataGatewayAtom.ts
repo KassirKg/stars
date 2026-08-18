@@ -5,6 +5,7 @@ import { type IPaymentDataGatewayAtom } from '../types/IPaymentDataGatewayAtom';
 export const paymentDataGatewayAtom = atom<IPaymentDataGatewayAtom>({
   id: 0,
   size: '',
+  colorId: null,
   fullName: '',
   phoneNumber: '',
   email: '',
