@@ -7,6 +7,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { ProductSlider } from '@/entities/banner';
 import { fetchProduct } from '@/entities/product/server';
 import { ApiError } from '@/shared/api';
+import { brand } from '@/shared/config';
 import { decodeRouteParam } from '@/shared/lib';
 import { assertLocale } from '@/shared/lib/i18n';
 import { AsideBar } from '@/widgets/asideBar';
@@ -20,7 +21,6 @@ interface ProductPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-/** cache() дедуплицирует запрос между generateMetadata и страницей. */
 const getProduct = cache(async (locale: string, slug: string) => {
   try {
     return await fetchProduct(locale, slug);
@@ -35,13 +35,13 @@ export const generateMetadata = async ({ params }: ProductPageProps): Promise<Me
   const slug = decodeRouteParam(rawSlug);
 
   const product = await getProduct(locale, slug);
-  // notFound() здесь, а не только в теле: статус ответа задаётся до стриминга
   if (!product) notFound();
 
   return {
     title: product.title,
     description: product.description,
     openGraph: {
+      siteName: brand.appName,
       title: product.title,
       description: product.description,
       images: product.images.length ? [product.images[0]!] : undefined,

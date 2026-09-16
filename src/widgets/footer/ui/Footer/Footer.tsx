@@ -76,8 +76,7 @@ export const Footer = () => {
           </div>
 
           {NAV_GROUPS.map((group) => {
-            const links = group.links.filter((l) => !!l.href);
-            if (!links.length) return null;
+            const links = group.links;
             return (
               <div key={group.title} className={styles.col}>
                 <h3 className={styles.colTitle}>{t(group.title)}</h3>

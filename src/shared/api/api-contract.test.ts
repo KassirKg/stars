@@ -4,7 +4,6 @@ import { artistCategoriesSchema } from '@/entities/artistCategory/api/schemas';
 import { productDetailSchema, productListSchema } from '@/entities/product/api/schemas';
 import { artistDetailSchema, artistListSchema } from '@/entities/starHuman/api/schemas';
 
-// реальные ответы боевого API
 const CATEGORIES = {
   payload: [
     {
@@ -51,7 +50,6 @@ const PRODUCTS = {
   },
 };
 
-/** GET api/artist/уйцуйц */
 const ARTIST_DETAIL = {
   id: 'a23bc7cc-4411-443e-bf8a-3234fc464f4f',
   slug: 'уйцуйц',
@@ -65,7 +63,6 @@ const ARTIST_DETAIL = {
   seo: { title: 'уйцуйцуу', description: 'уцйуйц' },
 };
 
-/** GET api/product/eqweqw — обратите внимание: поля colors нет вообще */
 const PRODUCT_DETAIL = {
   id: '3f134864-c9ec-468a-86e3-a9bf016cf321',
   title: 'eqweqwewqe',

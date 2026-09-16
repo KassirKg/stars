@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import { UserRound } from 'lucide-react';
+
 import { formatPrice } from '@/shared/config';
 import { Link } from '@/shared/lib/i18n/navigation';
 
@@ -10,7 +12,6 @@ interface ProductCardProps {
   title: string;
   author: string;
   price: number;
-  /** KGS | UZS | TJS из API; без него берётся валюта витрины */
   currency?: string;
   image?: string;
   new?: boolean;
@@ -54,7 +55,12 @@ const ProductCard = ({
           {title}
         </h3>
 
-        <p className={styles.date}>{author}</p>
+        <p className={styles.date}>
+          <span className={styles.dateIcon} aria-hidden>
+            <UserRound size={13} strokeWidth={2.25} />
+          </span>
+          <span className={styles.dateText}>{author}</span>
+        </p>
       </div>
     </Link>
   );

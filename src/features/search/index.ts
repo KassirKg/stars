@@ -1,4 +1,4 @@
-export { SearchBar } from './ui/SearchBar/SearchBar';
+export { SearchTrigger } from './ui/SearchTrigger/SearchTrigger';
 export { useSearch } from './api/client';
 export { searchKeys } from './api/keys';
 export { searchResultSchema } from './api/schemas';

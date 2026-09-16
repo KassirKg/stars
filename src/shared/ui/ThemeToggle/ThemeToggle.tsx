@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { useAtom } from 'jotai';
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { cn } from '@/shared/lib';
@@ -14,10 +14,9 @@ import styles from './ThemeToggle.module.scss';
 const OPTIONS: {
   value: Theme;
   Icon: typeof Sun;
-  labelKey: 'themeLight' | 'themeSystem' | 'themeDark';
+  labelKey: 'themeLight' | 'themeDark';
 }[] = [
   { value: 'light', Icon: Sun, labelKey: 'themeLight' },
-  { value: 'system', Icon: Monitor, labelKey: 'themeSystem' },
   { value: 'dark', Icon: Moon, labelKey: 'themeDark' },
 ];
 

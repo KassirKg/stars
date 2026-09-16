@@ -9,7 +9,6 @@ type StarHumanCardProps = {
   name: string;
   description: string;
   image?: string;
-  /** ед. число из API: «Певец» — бейдж поверх обложки */
   categoryName?: string;
   onClick?: () => void;
 };

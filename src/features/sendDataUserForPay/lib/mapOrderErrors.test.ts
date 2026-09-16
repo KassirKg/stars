@@ -59,7 +59,6 @@ describe('mapOrderErrors', () => {
   });
 
   it('реальный 422 боевого бэкенда: пустое тело', () => {
-    // POST /api/order с {} — ответ снят с https://stars-api.kassir.kg
     const result = mapOrderErrors(
       validationError({
         product_id: 'required',

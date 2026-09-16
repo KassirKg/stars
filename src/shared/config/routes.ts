@@ -9,6 +9,6 @@ export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];
 
 const stripSlash = (url: string) => url.replace(/\/$/, '');
 
-export const BANNERS_URL = `${stripSlash(env.NEXT_PUBLIC_BASE_API_URL)}/storage/banners/`;
+export const BANNERS_URL = `${stripSlash(env.NEXT_PUBLIC_BANNERS_API_URL)}/storage/banners/`;
 
 export const IMAGES_URL = `${stripSlash(env.NEXT_PUBLIC_BASE_API_URL)}/storage/images/`;

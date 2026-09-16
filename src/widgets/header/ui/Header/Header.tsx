@@ -4,9 +4,10 @@ import Image from 'next/image';
 
 import { useTranslations } from 'next-intl';
 
-import { SearchBar } from '@/features/search';
+import { SearchTrigger } from '@/features/search';
 import { brand } from '@/shared/config';
 import { Link, usePathname } from '@/shared/lib/i18n/navigation';
+import { ThemeToggle } from '@/shared/ui';
 
 import styles from './Header.module.scss';
 import { Burger } from '../burger';
@@ -30,7 +31,7 @@ export const Header = () => {
         </Link>
 
         <div className={styles.searchSlot}>
-          <SearchBar placeholder={t('common.searchPlaceholder')} />
+          <SearchTrigger placeholder={t('common.searchPlaceholder')} shortcut />
         </div>
 
         <div className={styles.links}>
@@ -45,6 +46,7 @@ export const Header = () => {
         <Burger />
 
         <div className={styles.actions}>
+          <ThemeToggle />
           <LocaleSwitcher />
         </div>
       </div>

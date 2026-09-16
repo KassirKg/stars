@@ -8,7 +8,6 @@ import { productKeys } from './keys';
 import { type AllProductsParams, type ArtistProductsParams } from './params';
 import { type ProductList } from './schemas';
 
-/** Общий список товаров — п. 3. */
 export const useProducts = (params: AllProductsParams = {}) => {
   const locale = useLocale();
 
@@ -18,7 +17,6 @@ export const useProducts = (params: AllProductsParams = {}) => {
   });
 };
 
-/** Товары конкретной звезды — п. 5, выделенный эндпоинт. */
 export const useArtistProducts = (slug: string, params: ArtistProductsParams = {}) => {
   const locale = useLocale();
 

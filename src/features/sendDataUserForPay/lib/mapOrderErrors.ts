@@ -5,7 +5,6 @@ import { type ISendDataUserForPaySchema } from './schemas/sendDataUserForPaySche
 
 type FormField = keyof ISendDataUserForPaySchema;
 
-/** Имена полей из body (п. 8) -> поля формы. */
 const FIELD_BY_API_KEY: Record<string, FormField> = {
   'customer.full_name': 'fullName',
   'customer.phone': 'phoneNumber',
@@ -13,19 +12,13 @@ const FIELD_BY_API_KEY: Record<string, FormField> = {
 };
 
 export interface MappedOrderErrors {
-  /** ошибки, которые ложатся на конкретные поля формы */
   fields: Partial<Record<FormField, string>>;
-  /** всё остальное (product_id, size, count…) — показываем общим сообщением */
   rest: string[];
 }
 
 const firstMessage = (value: string | string[]): string =>
   Array.isArray(value) ? (value[0] ?? '') : value;
 
-/**
- * Разбирает 422 в ошибки формы. Не 422 или неожиданное тело —
- * возвращает пустой результат, вызывающий код покажет общий текст.
- */
 export const mapOrderErrors = (error: unknown): MappedOrderErrors => {
   const empty: MappedOrderErrors = { fields: {}, rest: [] };
 

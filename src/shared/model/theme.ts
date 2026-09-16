@@ -6,8 +6,8 @@ export type ResolvedTheme = 'light' | 'dark';
 
 const THEME_STORAGE_KEY = 'theme';
 
-export const themeAtom = atomWithStorage<Theme>(THEME_STORAGE_KEY, 'system', undefined, {
+export const themeAtom = atomWithStorage<Theme>(THEME_STORAGE_KEY, 'dark', undefined, {
   getOnInit: false,
 });
 
-export const resolvedThemeAtom = atom<ResolvedTheme>('light');
+export const resolvedThemeAtom = atom<ResolvedTheme>('dark');

@@ -10,6 +10,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { fetchArtistProducts, productKeys } from '@/entities/product/server';
 import { fetchArtist } from '@/entities/starHuman/server';
 import { ApiError, getQueryClient } from '@/shared/api';
+import { brand } from '@/shared/config';
 import { decodeRouteParam } from '@/shared/lib';
 import { assertLocale } from '@/shared/lib/i18n';
 import { ProductsList } from '@/widgets/productsList';
@@ -22,7 +23,6 @@ interface StarPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-/** cache() дедуплицирует запрос между generateMetadata и самой страницей. */
 const getArtist = cache(async (locale: string, slug: string) => {
   try {
     return await fetchArtist(locale, slug);
@@ -37,15 +37,13 @@ export const generateMetadata = async ({ params }: StarPageProps): Promise<Metad
   const slug = decodeRouteParam(rawSlug);
 
   const artist = await getArtist(locale, slug);
-  // notFound() именно здесь: метаданные резолвятся до того, как loading.tsx
-  // начнёт стримить ответ. Из самой страницы статус уже не переписать — будет
-  // отрисован not-found, но с кодом 200 (soft 404).
   if (!artist) notFound();
 
   return {
     title: artist.seo.title,
     description: artist.seo.description,
     openGraph: {
+      siteName: brand.appName,
       title: artist.seo.title,
       description: artist.seo.description,
       images: artist.image ? [artist.image] : undefined,

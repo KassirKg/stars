@@ -39,7 +39,6 @@ const ProductInfo = ({
 }: ProductInfoProps) => {
   const t = useTranslations();
   const [count, setCount] = useState(1);
-  // по умолчанию — первый доступный вариант, а не просто первый
   const [size, setSize] = useState(sizes.find((s) => s.available)?.value ?? '');
   const [colorId, setColorId] = useState<string | null>(
     colors.find((c) => c.available)?.id ?? null,
@@ -47,12 +46,11 @@ const ProductInfo = ({
   const [, setProduct] = useAtom(paymentDataGatewayAtom);
   const [, setIsAsideOpen] = useAtom(isAsideOpen);
 
-  // размер обязателен только если он у товара вообще есть:
-  // бэкенд отдаёт sizes: [] для товаров без размерной сетки
+  const safeCount = Math.min(Math.max(count, 1), Math.max(stock, 1));
   const canBuy = stock > 0 && (sizes.length === 0 || Boolean(size));
 
   const handleBuy = () => {
-    setProduct((prev) => ({ ...prev, id, price, currency, size, colorId, count }));
+    setProduct((prev) => ({ ...prev, id, price, currency, size, colorId, count: safeCount }));
     setIsAsideOpen(true);
   };
 
@@ -75,13 +73,21 @@ const ProductInfo = ({
       {sizes.length > 0 ? (
         <div className={styles.sizes}>
           <Shirt size={18} />
-          <span>
-            {t('sizes')}:{' '}
-            {sizes
-              .filter((s) => s.available)
-              .map((s) => s.value)
-              .join(', ')}
-          </span>
+          <span>{t('sizes')}:</span>
+          <div className={styles.sizeList}>
+            {sizes.map((s) => (
+              <button
+                key={s.value}
+                type="button"
+                aria-pressed={size === s.value}
+                disabled={!s.available}
+                onClick={() => setSize(s.value)}
+                className={`${styles.sizeOption} ${size === s.value ? styles.sizeOptionActive : ''}`}
+              >
+                {s.value}
+              </button>
+            ))}
+          </div>
         </div>
       ) : null}
 
@@ -119,21 +125,7 @@ const ProductInfo = ({
 
       <div className={styles.btns}>
         <div className={styles.btns_actions}>
-          <Counter count={count} setCount={setCount} />
-          {sizes.length > 0 ? (
-            <select
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-              className={styles.select}
-              aria-label={t('sizes')}
-            >
-              {sizes.map((s) => (
-                <option key={s.value} value={s.value} disabled={!s.available}>
-                  {s.value}
-                </option>
-              ))}
-            </select>
-          ) : null}
+          <Counter count={count} setCount={setCount} max={stock} />
         </div>
         <button type="button" className={styles.buyButton} onClick={handleBuy} disabled={!canBuy}>
           {t('buy')}

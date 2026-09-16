@@ -28,10 +28,7 @@ const inter = Inter({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#030712' },
-  ],
+  themeColor: '#111111',
 };
 
 export const generateStaticParams = () => routing.locales.map((locale) => ({ locale }));
@@ -49,19 +46,11 @@ export const generateMetadata = async ({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'meta-data' });
 
-  const FALLBACKS: Record<string, 'kg' | 'uz' | 'ru' | 'tj'> = {
-    tg: 'tj',
-    ky: 'kg',
-  };
+  const title = t('title');
+  const description = t('description');
+
   const code = env.NEXT_PUBLIC_COUNTRY_CODE;
-  const metaKey = (FALLBACKS[code] ?? code) as 'kg' | 'uz' | 'ru' | 'tj';
-  const safeKey = ['kg', 'uz', 'ru', 'tj'].includes(metaKey) ? metaKey : 'kg';
 
-  const title = t(`${safeKey}.title`);
-  const description = t(`${safeKey}.description`);
-
-  // без объявленных иконок браузер сам дёргает /favicon.ico, а его нет —
-  // запрос проваливается в [locale] и рендерит страницу с мусорной локалью
   const iconsDir = `/images/favicons/${['kg', 'tj', 'uz'].includes(code) ? code : 'kg'}`;
 
   return {
@@ -75,10 +64,24 @@ export const generateMetadata = async ({
       apple: `${iconsDir}/apple-touch-icon.png`,
     },
     title: {
-      default: title,
+      default: `${title} — ${brand.appName}`,
       template: `%s — ${brand.appName}`,
     },
     description,
+    keywords: t('keywords')
+      .split(',')
+      .map((keyword) => keyword.trim()),
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
+      },
+    },
     alternates: {
       canonical: '/',
       languages: Object.fromEntries(
@@ -115,8 +118,9 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
       className={inter.variable}
       suppressHydrationWarning
     >
+      {}
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script id="theme-init" dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
         <NextIntlClientProvider messages={messages} locale={locale}>

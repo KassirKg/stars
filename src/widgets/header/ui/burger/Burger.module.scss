@@ -19,13 +19,9 @@
     left: 0;
     width: 100%;
     height: 3px;
-    background: black;
+    background: var(--color-fg);
     border-radius: 10px;
     transition: 0.3s ease;
-
-    :global([data-theme='dark']) & {
-      background: white;
-    }
   }
 
   span:nth-child(1) {
@@ -63,51 +59,121 @@
   top: 0;
   right: 0;
   z-index: 1000;
-  width: 0;
+  width: 100%;
   height: 100%;
-  background: white;
-  transition: 0.3s ease;
-
-  :global([data-theme='dark']) & {
-    background: black;
-  }
+  visibility: hidden;
+  background: var(--color-bg);
+  transition:
+    transform 0.28s ease,
+    visibility 0.28s;
+  transform: translateX(100%);
 
   &_content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    align-items: start;
-    padding: 20px;
-    margin-top: 3rem;
+    height: 100%;
+    padding: 0 20px 24px;
   }
 
   a {
-    font-size: 18px;
-    color: #000;
     text-decoration: none;
   }
 }
 
 .menuOpen {
-  width: 100%;
+  visibility: visible;
+  transform: translateX(0);
+
+  .brand,
+  .links a,
+  .settings {
+    animation: burger-in 0.34s ease both;
+  }
+
+  .links a:nth-child(1) {
+    animation-delay: 0.06s;
+  }
+
+  .links a:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .links a:nth-child(3) {
+    animation-delay: 0.18s;
+  }
+
+  .settings {
+    animation-delay: 0.24s;
+  }
+}
+
+.brand {
+  display: flex;
+  flex: none;
+  align-items: center;
+  height: var(--header-h);
+  margin-bottom: $space-4;
 }
 
 .links {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 
   a {
-    color: black;
-
-    :global([data-theme='dark']) & {
-      color: white;
-    }
+    padding: 14px 0;
+    font-size: 20px;
+    font-weight: $font-weight-medium;
+    color: var(--color-fg);
+    border-bottom: 1px solid var(--color-border);
+    transition: color 0.2s ease;
   }
 }
 
-.activeLink {
-  color: var(--color-accent-9) !important;
+.links a.activeLink {
+  color: var(--color-accent-9);
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 20px;
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+}
+
+.settingsRow {
+  display: flex;
+  gap: $space-3;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settingsLabel {
+  font-size: $font-size-sm;
+  color: var(--color-fg-muted);
+}
+
+@keyframes burger-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuOpen {
+    .brand,
+    .links a,
+    .settings {
+      animation: none;
+    }
+  }
 }
 
 .overlay {

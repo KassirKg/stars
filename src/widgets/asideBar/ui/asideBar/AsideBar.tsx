@@ -4,9 +4,8 @@ import Image from 'next/image';
 
 import { useIsMutating } from '@tanstack/react-query';
 import { useAtom } from 'jotai';
-import { ReceiptText, UserRound } from 'lucide-react';
+import { ReceiptText, UserRound, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { IoClose } from 'react-icons/io5';
 
 import { paymentDataGatewayAtom } from '@/entities/payment';
 import { FormSendDataUserForPay, createOrderMutationKey } from '@/features/sendDataUserForPay';
@@ -46,14 +45,23 @@ const AsideBar = ({ ...props }: AsideBarProps) => {
           <div className={styles.header__top}>
             <h2>{localizer('checkoutTitle')}</h2>
             <button type="button" className={styles.close} onClick={onClose} aria-label="close">
-              <IoClose size={24} />
+              <X size={24} />
             </button>
           </div>
 
           <h4>{localizer('checkoutSubtitle')}</h4>
 
           <div className={styles.productInfo}>
-            <Image src={props.image} alt={'product image'} width={100} height={100} priority />
+            <div className={styles.productInfo_image}>
+              <Image
+                src={props.image}
+                alt={props.title}
+                fill
+                sizes="(max-width: 640px) 140px, 100px"
+                quality={90}
+                priority
+              />
+            </div>
             <div className={styles.productInfo_textInfo}>
               <h4>{props.title}</h4>
               <p>

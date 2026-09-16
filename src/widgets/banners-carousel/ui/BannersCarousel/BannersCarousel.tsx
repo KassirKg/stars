@@ -1,89 +1,50 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import 'swiper/css';
+import 'swiper/css/autoplay';
 
 import Image from 'next/image';
 
-import Autoplay from 'embla-carousel-autoplay';
-import Fade from 'embla-carousel-fade';
-import useEmblaCarousel from 'embla-carousel-react';
+import { Autoplay } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { BANNERS_URL } from '@/shared/config';
-import { Link } from '@/shared/lib/i18n/navigation';
 
 import styles from './BannersCarousel.module.scss';
 import { type BannersCarouselProps } from './BannersCarousel.types';
 
-export const BannersCarousel = ({ banners, variant = 'main' }: BannersCarouselProps) => {
-  const validBanners = useMemo(() => banners.filter((b) => b.image_path), [banners]);
-
-  const plugins = useMemo(
-    () =>
-      validBanners.length > 1 ? [Fade(), Autoplay({ delay: 4000, stopOnInteraction: false })] : [],
-    [validBanners.length],
-  );
-
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: validBanners.length > 1, align: 'center' },
-    plugins,
-  );
-
-  const [selectedIdx, setSelectedIdx] = useState(0);
-
-  const scrollTo = useCallback((idx: number) => emblaApi?.scrollTo(idx), [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    const onSelect = () => setSelectedIdx(emblaApi.selectedScrollSnap());
-    onSelect();
-    emblaApi.on('select', onSelect);
-    return () => {
-      emblaApi.off('select', onSelect);
-    };
-  }, [emblaApi]);
-
-  if (validBanners.length === 0) return null;
-
-  const isStrip = variant === 'strip';
-  const w = isStrip ? 1280 : 1280;
-  const h = isStrip ? 120 : 480;
-
-  return (
-    <section className={`${styles.root} ${isStrip ? styles.strip : ''}`}>
-      <div className={styles.viewport} ref={emblaRef}>
-        <div className={styles.track}>
-          {validBanners.map((banner, idx) => (
-            <div key={banner.id} className={styles.slide}>
-              <Link href={banner.link || '/'} className={styles.link}>
+export const BannersCarousel = ({ banners }: BannersCarouselProps) => (
+  <div className={styles.root}>
+    <div className={styles.inner}>
+      <Swiper
+        slidesPerView={1}
+        loop
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        className={styles.container}
+        autoHeight
+        speed={500}
+        modules={[Autoplay]}
+      >
+        {banners.map((banner) =>
+          banner.image_path ? (
+            <SwiperSlide key={banner.id}>
+              {}
+              <a href={banner.link} target="_blank" rel="noreferrer">
                 <Image
-                  src={`${BANNERS_URL}${banner.image_path}`}
-                  alt=""
-                  width={w}
-                  height={h}
-                  className={styles.image}
-                  priority={idx === 0}
-                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  width={840}
+                  height={345}
+                  src={BANNERS_URL + banner.image_path}
+                  alt="banner"
+                  className={styles.banner}
                 />
-              </Link>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {validBanners.length > 1 ? (
-        <div className={styles.dots}>
-          {validBanners.map((b, idx) => (
-            <button
-              key={b.id}
-              type="button"
-              className={styles.dot}
-              aria-label={`Slide ${idx + 1}`}
-              aria-current={idx === selectedIdx}
-              onClick={() => scrollTo(idx)}
-            />
-          ))}
-        </div>
-      ) : null}
-    </section>
-  );
-};
+              </a>
+            </SwiperSlide>
+          ) : null,
+        )}
+      </Swiper>
+    </div>
+  </div>
+);

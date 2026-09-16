@@ -8,14 +8,21 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const withNextIntl = createNextIntlPlugin('./src/shared/lib/i18n/request.ts');
 
-const apiImagePattern = (() => {
+const remotePattern = (url) => {
   try {
-    const { protocol, hostname } = new URL(process.env.NEXT_PUBLIC_BASE_API_URL);
+    const { protocol, hostname } = new URL(url);
     return [{ protocol: protocol.replace(':', ''), hostname }];
   } catch {
     return [];
   }
-})();
+};
+
+const apiImagePattern = remotePattern(process.env.NEXT_PUBLIC_BASE_API_URL);
+
+// баннеры лежат на шлюзе kassir, а не на stars-api
+const bannersImagePattern = remotePattern(
+  process.env.NEXT_PUBLIC_BANNERS_API_URL ?? 'https://gateway.kassir.kg',
+);
 
 const withBundleAnalyzer = withBundleAnalyzerFactory({
   enabled: process.env.ANALYZE === 'true',
@@ -57,7 +64,14 @@ const nextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [...apiImagePattern, { protocol: 'https', hostname: 'stars-api.kassir.kg' }],
+    // в Next 16 список закрытый и по умолчанию это [75]; 90 нужен обложкам
+    // товаров в оформлении заказа — там мелкий текст на скриншотах
+    qualities: [75, 90],
+    remotePatterns: [
+      ...apiImagePattern,
+      ...bannersImagePattern,
+      { protocol: 'https', hostname: 'stars-api.kassir.kg' },
+    ],
   },
 
   sassOptions: {

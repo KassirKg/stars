@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 
-import { SearchBar } from '@/features/search';
+import { SearchTrigger } from '@/features/search';
 
 import styles from './MobileSearch.module.scss';
 
@@ -11,7 +11,7 @@ export const MobileSearch = () => {
 
   return (
     <div className={styles.root}>
-      <SearchBar placeholder={t('searchPlaceholder')} />
+      <SearchTrigger placeholder={t('searchPlaceholder')} />
     </div>
   );
 };

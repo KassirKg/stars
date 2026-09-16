@@ -11,7 +11,6 @@ import styles from './ProductsList.module.scss';
 
 interface ProductsListProps {
   title?: string;
-  /** slug звезды — тогда берём её выделенный эндпоинт (п. 5) */
   artist?: string;
 }
 

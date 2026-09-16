@@ -3,17 +3,16 @@
     "cancel": "Bekor qilish"
   },
   "meta-data": {
-    "uz": {
-      "title": "Qulay chipta operatori ShowGo.uz",
-      "description": "Bizning ilovamiz sizning qulayligingiz uchun ishlab chiqilgan. Bir necha bosish orqali konsertlar, teatrlar va sport tadbirlariga chiptalar qo‘lingizda bo‘ladi!"
+    "title": "Yulduzlar merchi va shaxsiy buyumlari",
+    "description": "Artistlar, qoʻshiqchilar va blogerlarning rasmiy merchi: futbolkalar, xudilar, aksessuarlar va cheklangan toʻplamlar. Yulduzlarning shaxsiy buyumlari bevosita oʻzlaridan.",
+    "keywords": "yulduzlar merchi, rasmiy merch, artistlar mahsulotlari, mashhurlarning shaxsiy buyumlari, cheklangan toʻplamlar",
+    "stars": {
+      "title": "Barcha yulduzlar",
+      "description": "Artistlar, qoʻshiqchilar, blogerlar bitta vitrinada. Sevimlingizni tanlang va uning rasmiy merchi va shaxsiy buyumlarini koʻring."
     },
-    "kg": {
-      "title": "Milliy chipta operatori Kassir.kg",
-      "description": "Bizning ilovamiz sizning qulayligingiz uchun ishlab chiqilgan. Bir necha bosish orqali konsertlar, teatrlar va sport tadbirlariga chiptalar qo‘lingizda bo‘ladi!"
-    },
-    "tj": {
-      "title": "Qulay chipta operatori ShowGo.tj",
-      "description": "Bizning ilovamiz sizning qulayligingiz uchun ishlab chiqilgan. Bir necha bosish orqali konsertlar, teatrlar va sport tadbirlariga chiptalar qo‘lingizda bo‘ladi!"
+    "catalog": {
+      "title": "Mahsulotlar katalogi",
+      "description": "Yulduzlarning rasmiy merchi katalogi: futbolkalar, xudilar, aksessuarlar va artistlar hamda blogerlarning cheklangan toʻplamlari."
     }
   },
   "footer": {

@@ -17,7 +17,6 @@ export const useSearch = (query: string, params: Omit<SearchParams, 'query'> = {
     queryFn: () => fetchSearch(locale, { query: trimmed, ...params }),
     enabled: trimmed.length > 0,
     staleTime: 30_000,
-    // не мигаем пустотой, пока летит следующий запрос
     placeholderData: (prev) => prev,
   });
 };

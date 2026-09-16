@@ -93,8 +93,21 @@
       border: 1px solid #313539;
     }
 
-    img {
+    &_image {
+      position: relative;
+      flex-shrink: 0;
+      width: 100px;
+      aspect-ratio: 1 / 1.2;
+      overflow: hidden;
       border-radius: 10px;
+
+      @media screen and (max-width: bp('sm')) {
+        width: 140px;
+      }
+    }
+
+    img {
+      object-fit: contain;
     }
 
     &_textInfo {

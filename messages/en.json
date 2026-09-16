@@ -7,24 +7,20 @@
     "themeDark": "Dark",
     "themeSystem": "System",
     "error": "Something went wrong",
-    "loading": "Loading"
+    "loading": "Loading",
+    "language": "Language"
   },
   "meta-data": {
-    "uz": {
-      "title": "Convenient ticket operator ShowGo.uz",
-      "description": "Our app is designed for your convenience. Just a few clicks and you have tickets to concerts, theater, sports events!"
+    "title": "Star merch and personal items",
+    "description": "Official merch from artists, singers and bloggers: tees, hoodies, accessories and limited collections, plus personal items straight from the stars.",
+    "keywords": "star merch, official artist merch, celebrity items, limited edition merch, singer merchandise, blogger merch",
+    "stars": {
+      "title": "All stars",
+      "description": "Artists, singers, bloggers and more in one place. Pick your favourite and browse their official merch and personal items."
     },
-    "kg": {
-      "title": "National ticket operator Kassir.kg",
-      "description": "Our app is designed for your convenience. Just a few clicks and you have tickets to concerts, theater, sports events!"
-    },
-    "ru": {
-      "title": "Национальный билетный оператор TicketUp.ru",
-      "description": "Наше приложение разработано для вашего комфорта.  Несколько кликов и билеты на мероприятия (концерты, театр, спорт) будут у Вас!"
-    },
-    "tj": {
-      "title": "Convenient ticket operator ShowGo.tj",
-      "description": "Our app is designed for your convenience. Just a few clicks and you have tickets to concerts, theater, sports events!"
+    "catalog": {
+      "title": "Product catalogue",
+      "description": "The full catalogue of official star merch: tees, hoodies, accessories and limited collections from artists, singers and bloggers."
     }
   },
   "footer": {
@@ -36,7 +32,6 @@
     "support": "Support",
     "rules": "Terms and conditions",
     "userAgreement": "User agreement",
-    "returnPolicy": "Return policy",
     "delivery": "Delivery",
     "forHolders": "Information for rights holders",
     "privacyPolicy": "Privacy policy",
@@ -76,6 +71,17 @@
   "search": {
     "stars": "Stars",
     "products": "Products",
-    "empty": "Nothing found"
+    "empty": "Nothing found",
+    "hint": "Start typing to search",
+    "escHint": "to close",
+    "clear": "Clear"
+  },
+  "legal": {
+    "requisites": "Details and contacts",
+    "marks": "Mark variants",
+    "markBase": "Primary mark — on a light ground",
+    "markMono": "Monochrome — on the brand ground",
+    "markInvert": "Inverted — on a dark ground",
+    "markLightType": "Light lettering — on a dark ground"
   }
 }

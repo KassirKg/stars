@@ -6,26 +6,27 @@ import styles from './Counter.module.scss';
 interface CounterProps {
   count: number;
   setCount: (value: number) => void;
+  max?: number;
 }
 
-function Counter({ count = 1, setCount }: CounterProps) {
+function Counter({ count = 1, setCount, max }: CounterProps) {
+  const limit = typeof max === 'number' && Number.isFinite(max) ? Math.max(max, 1) : Infinity;
+
   const increment = () => {
-    setCount(count + 1);
+    setCount(Math.min(count + 1, limit));
   };
 
   const decrement = () => {
-    if (count > 1) {
-      setCount(count - 1);
-    }
+    setCount(Math.max(count - 1, 1));
   };
 
   return (
     <div className={styles.counter}>
-      <button onClick={decrement}>
+      <button type="button" onClick={decrement} disabled={count <= 1} aria-label="minus">
         <Minus size={20} />
       </button>
       <span>{count}</span>
-      <button onClick={increment}>
+      <button type="button" onClick={increment} disabled={count >= limit} aria-label="plus">
         <Plus size={20} />
       </button>
     </div>

@@ -1,0 +1,116 @@
+@use 'abstracts' as *;
+
+.root {
+  max-width: 760px;
+  padding: $space-8 0 $space-16;
+  margin: 0 auto;
+}
+
+.header {
+  padding-bottom: $space-6;
+  margin-bottom: $space-8;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  margin: 0 0 $space-3;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: var(--color-fg);
+  text-wrap: balance;
+
+  @include media-down('sm') {
+    font-size: $font-size-2xl;
+  }
+}
+
+.intro {
+  margin: 0;
+  font-size: $font-size-lg;
+  line-height: $line-height-relaxed;
+  color: var(--color-fg-muted);
+}
+
+.section {
+  & + & {
+    margin-top: $space-8;
+  }
+}
+
+.heading {
+  margin: 0 0 $space-3;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: var(--color-fg);
+}
+
+.paragraph {
+  margin: 0 0 $space-3;
+  font-size: $font-size-base;
+  line-height: $line-height-relaxed;
+  color: var(--color-fg-muted);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding-left: $space-5;
+  margin: 0;
+  font-size: $font-size-base;
+  line-height: $line-height-relaxed;
+  color: var(--color-fg-muted);
+
+  li::marker {
+    color: var(--color-accent-9);
+  }
+}
+
+.contacts {
+  padding-top: $space-6;
+  margin-top: $space-12;
+  border-top: 1px solid var(--color-border);
+}
+
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.contactItem {
+  display: flex;
+  gap: $space-2;
+  align-items: center;
+  font-size: $font-size-sm;
+  color: var(--color-fg-muted);
+
+  svg {
+    flex-shrink: 0;
+    color: var(--color-accent-9);
+  }
+
+  a {
+    color: var(--color-fg-muted);
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-fg);
+    }
+  }
+}
+
+.entity {
+  margin: $space-4 0 0;
+  font-size: $font-size-sm;
+  color: var(--color-fg-subtle);
+}

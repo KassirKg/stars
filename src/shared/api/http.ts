@@ -26,6 +26,7 @@ const LOCALE_TO_HEADER: Record<string, string> = {
 const API_PREFIX = 'api';
 const stripSlash = (url: string) => url.replace(/\/$/, '');
 const apiBase = `${stripSlash(env.NEXT_PUBLIC_BASE_API_URL)}/${API_PREFIX}`;
+const bannersBase = `${stripSlash(env.NEXT_PUBLIC_BANNERS_API_URL)}/v1`;
 const ipBase = `${stripSlash(env.NEXT_PUBLIC_IP_API_URL)}/${API_PREFIX}`;
 
 const getStoredToken = (): string | null => {
@@ -73,12 +74,32 @@ export const ipApi = ofetch.create({
   retry: 0,
 });
 
-/** ofetch отдаёт в хуки либо строку, либо Request — приводим к пути для лога. */
 const requestPath = (request: unknown): string => {
   if (typeof request === 'string') return request;
   if (request instanceof Request) return request.url;
   return '';
 };
+
+export const localeHeader = (locale: string): string => LOCALE_TO_HEADER[locale] ?? locale;
+
+export const bannersApi = ofetch.create({
+  baseURL: bannersBase,
+  retry: 0,
+  onRequest({ options }) {
+    const headers = new Headers(options.headers);
+    if (!headers.has('Accept')) headers.set('Accept', 'application/json');
+    if (!headers.has('Country-Code')) headers.set('Country-Code', env.NEXT_PUBLIC_COUNTRY_CODE);
+    options.headers = headers;
+  },
+  onResponseError({ request, response }) {
+    if (env.NEXT_PUBLIC_APP_ENV === 'development') {
+      console.error(
+        `[api:banners] ${response?.status} ${bannersBase}${requestPath(request)}`,
+        response?._data,
+      );
+    }
+  },
+});
 
 const localeClients = new Map<string, ReturnType<typeof ofetch.create>>();
 
@@ -100,8 +121,6 @@ export const httpWithLocale = (locale: string) => {
       if (!headers.has('Country-Code')) headers.set('Country-Code', env.NEXT_PUBLIC_COUNTRY_CODE);
       options.headers = headers;
 
-      // большинство запросов уходит с сервера — в DevTools их не видно,
-      // поэтому в dev печатаем их в консоль (сервер: терминал, клиент: браузер)
       if (isDev) {
         const where = typeof window === 'undefined' ? 'server' : 'client';
         console.info(`[api:${where}] ${options.method ?? 'GET'} ${apiBase}${requestPath(request)}`);
@@ -125,8 +144,6 @@ export const apiCall = async <T>(request: () => Promise<T>): Promise<T> => {
   try {
     return await request();
   } catch (error) {
-    // ошибка zod прилетает сюда же, но prefetchQuery её проглатывает молча —
-    // без этого лога расхождение схемы с бэкендом выглядит как пустая страница
     if (env.NEXT_PUBLIC_APP_ENV === 'development') {
       console.error('[api] запрос не прошёл:', error);
     }

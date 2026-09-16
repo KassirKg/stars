@@ -57,7 +57,6 @@ function FormSendDataUserForPay() {
       },
       {
         onSuccess: ({ payment_url }) => {
-          // внешняя платёжная страница — уходим полной навигацией
           window.location.href = payment_url;
         },
         onError: (error) => {

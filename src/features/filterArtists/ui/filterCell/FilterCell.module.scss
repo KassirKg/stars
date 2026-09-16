@@ -1,39 +1,40 @@
+@use 'abstracts' as *;
+
 .cell {
-  height: 38px;
-  padding: 0 16px;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  gap: $space-2;
+  align-items: center;
+  height: 36px;
+  padding: 0 $space-4;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-fg-muted);
+  white-space: nowrap;
   cursor: pointer;
-  background: color(display-p3 0.939 0.939 0.939);
-  border: 1px solid color(display-p3 0.849 0.849 0.849);
-  border-radius: 16px;
-  transition: 0.2s;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full);
+  transition: color 180ms ease;
 
   &:hover {
-    background: color(display-p3 0.973 0.796 0.184);
+    color: var(--color-fg);
   }
 
-  :global([data-theme='dark']) & {
-    color: #fff;
-    background-color: color(display-p3 0.098 0.098 0.098);
-    border: 1px solid color(display-p3 0.228 0.228 0.228);
-
-    &:hover {
-      color: black;
-      background: color(display-p3 0.973 0.796 0.184);
-    }
-  }
-
-  span {
-    font-size: 14px;
-    font-weight: 500;
+  &:focus-visible {
+    @include focus-ring;
   }
 }
 
-.active {
-  background: color(display-p3 0.973 0.796 0.184);
+.icon {
+  flex-shrink: 0;
+}
 
-  :global([data-theme='dark']) & {
-    color: black;
-    background: color(display-p3 0.973 0.796 0.184);
-    border: 1px solid color(display-p3 0.228 0.228 0.228);
+.active {
+  color: var(--color-accent-contrast);
+
+  &:hover {
+    color: var(--color-accent-contrast);
   }
 }

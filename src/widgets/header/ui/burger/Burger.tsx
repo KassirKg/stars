@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from 'react';
 
+import Image from 'next/image';
+
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 
+import { brand } from '@/shared/config';
 import { Link, usePathname } from '@/shared/lib/i18n/navigation';
+import { ThemeToggle } from '@/shared/ui';
 import { LocaleSwitcher } from '@/widgets/header/ui/LocaleSwitcher/LocaleSwitcher';
 
 import styles from './Burger.module.scss';
@@ -19,6 +23,23 @@ export default function Burger() {
     setOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
   return (
     <>
       <button
@@ -26,6 +47,7 @@ export default function Burger() {
         type="button"
         onClick={() => setOpen((p) => !p)}
         aria-label="menu"
+        aria-expanded={open}
       >
         <span />
         <span />
@@ -34,7 +56,16 @@ export default function Burger() {
 
       <div className={clsx(styles.menu, open && styles.menuOpen)}>
         <div className={styles.menu_content}>
-          <div className={styles.links}>
+          <Link
+            href="/"
+            className={styles.brand}
+            aria-label={brand.appName}
+            onClick={() => setOpen(false)}
+          >
+            <Image src="/images/logos/kg/headerLogo.svg" alt="" width={120} height={40} />
+          </Link>
+
+          <nav className={styles.links}>
             <Link className={pathname === '/' ? styles.activeLink : ''} href={'/'}>
               {t('appHeader.main')}
             </Link>
@@ -44,8 +75,18 @@ export default function Burger() {
             <Link className={pathname === '/catalog' ? styles.activeLink : ''} href={'/catalog'}>
               {t('appHeader.catalog')}
             </Link>
+          </nav>
+
+          <div className={styles.settings}>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t('common.language')}</span>
+              <LocaleSwitcher />
+            </div>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t('common.switchTheme')}</span>
+              <ThemeToggle />
+            </div>
           </div>
-          <LocaleSwitcher />
         </div>
       </div>
 

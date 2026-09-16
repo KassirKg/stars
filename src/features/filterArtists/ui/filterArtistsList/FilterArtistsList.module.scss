@@ -1,6 +1,45 @@
+@use 'abstracts' as *;
+
 .filterList {
   display: flex;
-  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.track {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: $space-4;
   align-items: center;
-  overflow-x: scroll;
+  padding: $space-1;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.pill {
+  position: absolute;
+  top: $space-1;
+  bottom: $space-1;
+  left: 0;
+  background: var(--color-accent-9);
+  border-radius: var(--radius-full);
+  will-change: transform, width;
+}
+
+.pillAnimated {
+  transition:
+    transform 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    width 180ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pillAnimated {
+    transition: none;
+  }
 }

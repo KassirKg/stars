@@ -10,10 +10,6 @@ import { artistKeys } from './keys';
 import { type AllArtistsParams } from './params';
 import { type ArtistList } from './schemas';
 
-/**
- * Звёзды для сетки. `category` — slug из api/artist-categories
- * либо ALL_CATEGORIES, тогда берём общий список без фильтра.
- */
 export const useArtists = (category: string = ALL_CATEGORIES, params: AllArtistsParams = {}) => {
   const locale = useLocale();
   const isAll = category === ALL_CATEGORIES;

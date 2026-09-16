@@ -1,22 +1,16 @@
 'use client';
 
-import { useAtomValue } from 'jotai';
-
 import { StarHumanCard, useArtists } from '@/entities/starHuman';
-import { selectedArtistCategoryAtom } from '@/shared/model';
 
 import styles from './StarsList.module.scss';
 
 interface ContentSectionProps {
   title?: string;
-  /** Жёстко заданная категория. Без неё берём выбранную в фильтре. */
-  category?: string;
+  category: string;
 }
 
 const StarsList = ({ title, category }: ContentSectionProps) => {
-  const selectedCategory = useAtomValue(selectedArtistCategoryAtom);
-  // Фильтрует бэкенд: «Все» -> api/all-artists, категория -> api/artist-categories/{slug}
-  const { data } = useArtists(category ?? selectedCategory);
+  const { data } = useArtists(category);
 
   const artists = data?.items ?? [];
 
