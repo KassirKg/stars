@@ -52,7 +52,6 @@ export const http = ofetch.create({
   onRequest({ options }) {
     const headers = new Headers(options.headers);
     if (!headers.has('Accept')) headers.set('Accept', 'application/json');
-    if (!headers.has('Country-Code')) headers.set('Country-Code', env.NEXT_PUBLIC_COUNTRY_CODE);
     if (!headers.has('Authorization')) {
       const token = getStoredToken();
       if (token) headers.set('Authorization', `Bearer ${token}`);
@@ -88,7 +87,6 @@ export const bannersApi = ofetch.create({
   onRequest({ options }) {
     const headers = new Headers(options.headers);
     if (!headers.has('Accept')) headers.set('Accept', 'application/json');
-    if (!headers.has('Country-Code')) headers.set('Country-Code', env.NEXT_PUBLIC_COUNTRY_CODE);
     options.headers = headers;
   },
   onResponseError({ request, response }) {
@@ -118,7 +116,6 @@ export const httpWithLocale = (locale: string) => {
       if (!headers.has('Accept-Language')) {
         headers.set('Accept-Language', LOCALE_TO_HEADER[locale] ?? locale);
       }
-      if (!headers.has('Country-Code')) headers.set('Country-Code', env.NEXT_PUBLIC_COUNTRY_CODE);
       options.headers = headers;
 
       if (isDev) {
