@@ -52,7 +52,7 @@ export const SearchTrigger = ({ placeholder, shortcut = false, className }: Sear
         aria-haspopup="dialog"
         aria-expanded={isOpen}
       >
-        <Search className={styles.icon} size={18} aria-hidden />
+        <Search className={styles.icon} size={16} aria-hidden />
         <span className={styles.label}>{label}</span>
         {shortcut ? (
           <kbd className={styles.hint} aria-hidden>

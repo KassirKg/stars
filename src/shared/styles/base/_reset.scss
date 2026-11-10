@@ -19,6 +19,7 @@ body {
 
 html {
   -webkit-text-size-adjust: 100%;
+  touch-action: pan-x pan-y;
   -moz-tab-size: 4;
   tab-size: 4;
 }

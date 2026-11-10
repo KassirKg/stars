@@ -44,7 +44,7 @@ cp .env.example .env.local
 
 # Dev-сервер
 yarn dev
-# → http://localhost:3000
+# → http://localhost:3001
 ```
 
 Требуется Node.js ≥ 20 (зафиксировано в `.nvmrc`).

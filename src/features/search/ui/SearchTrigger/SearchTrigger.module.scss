@@ -5,7 +5,7 @@
   gap: $space-2;
   align-items: center;
   width: 100%;
-  height: 44px;
+  height: 36px;
   padding: 0 $space-3;
   cursor: pointer;
   background: var(--color-panel);
@@ -49,7 +49,7 @@
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
-    height: 22px;
+    height: 20px;
     padding: 0 $space-2;
     font-family: var(--font-sans);
     font-size: $font-size-xs;

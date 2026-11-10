@@ -11,6 +11,7 @@ import { assertLocale } from '@/shared/lib/i18n';
 import { routing } from '@/shared/lib/i18n/routing';
 import { themeInitScript } from '@/shared/lib/theme-init-script';
 import { AppProviders } from '@/shared/providers/AppProviders';
+import { DisableZoom } from '@/shared/providers/DisableZoom';
 import { WebVitals } from '@/shared/providers/WebVitals';
 import { ScrollToTop } from '@/shared/ui';
 
@@ -28,6 +29,8 @@ const inter = Inter({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: '#111111',
 };
 
@@ -125,6 +128,7 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
         </NextIntlClientProvider>
         <Toaster position="top-center" />
         <WebVitals />
+        <DisableZoom />
       </body>
     </html>
   );
